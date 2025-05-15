@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>お問い合わせチャット</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .chat-container {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 360px;
+      padding: 30px;
+      backdrop-filter: blur(8px);
+      animation: slideIn 0.8s ease forwards;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      font-weight: bold;
+      color: #444;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      font-size: 15px;
+      transition: border 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      border: 1px solid #4ca1af;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #43e97b, #38f9d7);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+      background: linear-gradient(to right, #38f9d7, #43e97b);
+    }
+
+    #status-message {
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+  <h2>お問い合わせ</h2>
+  <form id="contact-form">
+    <label for="name">お名前</label>
+    <input type="text" id="name" name="from_name" required>
+
+    <label for="email">メールアドレス</label>
+    <input type="email" id="email" name="reply_to" required>
+
+    <label for="message">メッセージ</label>
+    <textarea id="message" name="message" rows="4" required></textarea>
+
+    <button type="submit">メッセージを送信</button>
+    <div id="status-message"></div>
+  </form>
+</div>
+
+<script>
+  emailjs.init("W1bxfagn-k1z5glFb"); // Replace with your actual EmailJS Public Key
+
+  document.getElementById("contact-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const statusMessage = document.getElementById("status-message");
+    statusMessage.innerHTML = "送信中...";
+
+    emailjs.sendForm("service_gkjggkl", "template_5h1zme9", this)
+      .then(() => {
+        statusMessage.innerHTML = "<p style='color: green;'>メッセージが送信されました！</p>";
+        this.reset();
+      })
+      .catch((error) => {
+        console.error("EmailJS error:", error);
+        statusMessage.innerHTML = "<p style='color: red;'>送信に失敗しました。もう一度お試しください。</p>";
+      });
+  });
+</script>
+
+</body>
+</html>
